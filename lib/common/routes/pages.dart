@@ -4,7 +4,7 @@ import 'package:flutter_ducafecat_news_getx/pages/application/index.dart';
 import 'package:flutter_ducafecat_news_getx/pages/category/index.dart';
 import 'package:flutter_ducafecat_news_getx/pages/frame/sign_in/index.dart';
 import 'package:flutter_ducafecat_news_getx/pages/frame/sign_up/index.dart';
-import 'package:flutter_ducafecat_news_getx/pages/frame/welcome/index.dart';
+import 'package:flutter_ducafecat_news_getx/pages/layout/index.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';
@@ -16,13 +16,18 @@ class AppPages {
 
   static final List<GetPage> routes = [
     // 免登陆
+    // GetPage(
+    //   name: AppRoutes.INITIAL,
+    //   page: () => WelcomePage(),
+    //   binding: WelcomeBinding(),
+    //   middlewares: [
+    //     RouteWelcomeMiddleware(priority: 1),
+    //   ],
+    // ),
     GetPage(
       name: AppRoutes.INITIAL,
-      page: () => WelcomePage(),
-      binding: WelcomeBinding(),
-      middlewares: [
-        RouteWelcomeMiddleware(priority: 1),
-      ],
+      page: () => LayoutPage(),
+      binding: LayoutBinding(),
     ),
     GetPage(
       name: AppRoutes.SIGN_IN,
@@ -53,9 +58,9 @@ class AppPages {
     ),
   ];
 
-  // static final unknownRoute = GetPage(
-  //   name: AppRoutes.NotFound,
-  //   page: () => NotfoundView(),
-  // );
+// static final unknownRoute = GetPage(
+//   name: AppRoutes.NotFound,
+//   page: () => NotfoundView(),
+// );
 
 }

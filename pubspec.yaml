@@ -87,6 +87,14 @@ dependencies:
 
   # 通过 scheme 打开APP 获取 参数
   uni_links: ^0.5.1
+  flutter_acrylic:
+    git: https://github.com/alexmercerind/flutter_acrylic.git
+#  flutter_acrylic:
+#    git:
+#      url: https://github.com/alexmercerind/flutter_acrylic.git
+#      ref: master
+  bitsdojo_window: ^0.1.1+1
+  code_builder: ^4.1.0
 
 dev_dependencies:
   flutter_test:

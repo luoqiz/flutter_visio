@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_ducafecat_news_getx/common/langs/translation_service.dart';
 import 'package:flutter_ducafecat_news_getx/common/routes/pages.dart';
 import 'package:flutter_ducafecat_news_getx/common/store/store.dart';
@@ -12,6 +16,29 @@ import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  debugRepaintRainbowEnabled=true;
+  if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
+    await Window.initialize();
+    // await Window.hideWindowControls();
+
+    await Window.setEffect(
+      effect: WindowEffect.acrylic,
+      color: Color(0xCC222222),
+    );
+
+    //
+    // if (Platform.isWindows) {
+    //   doWhenWindowReady(() {
+    //     appWindow
+    //       ..minSize = const Size(640, 360)
+    //     // ..size = const Size(720, 540)
+    //       ..alignment = Alignment.center
+    //       ..show();
+    //   });
+    // }
+  }
+
   await Global.init();
   runApp(MyApp());
 }
