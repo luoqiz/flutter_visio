@@ -150,7 +150,7 @@ class VisualRootState extends State<VisualRoot> {
 class VisualWrapper extends VisualStatefulWidget {
   VisualWrapper(
       {required this.child, required String id, required this.sourceCode})
-      : super(key: GlobalKey(), id: id);
+      : super(key: GlobalKey<VisualState>(), id: id);
 
   final Widget child;
 
@@ -183,7 +183,7 @@ class VisualProxyWrapper extends VisualStatefulWidget {
     required this.child,
     required this.visualWidget,
     required String id,
-  }) : super(key: GlobalKey(), id: id);
+  }) : super(key: GlobalKey<VisualState>(), id: id);
 
   final Widget child;
   final VisualStatefulWidget visualWidget;
@@ -504,10 +504,11 @@ class _VisualFloatingActionButtonState
 
   @override
   List<WidgetProperty> get modifiedWidgetProperties => [
-        WidgetProperty(
-          name: "child",
-          dynamicWidget: childKey.currentState?.child,
-        ),
+        if (childKey.currentState?.child != null)
+          WidgetProperty(
+            name: "child",
+            dynamicWidget: childKey.currentState?.child,
+          ),
       ];
 }
 
@@ -611,23 +612,24 @@ class _VisualScaffoldState extends VisualState<VisualScaffold> {
             Container(height: 50, width: 50, color: Colors.pink),
       ),
       appBar: AppBarHeightWidgetWidget(
-          child: LayoutDragTarget(
-        key: appBarKey,
-        child: widget.appBar,
-        feedback: SizedBox(
-          width: 200,
-          height: 52,
+        child: LayoutDragTarget(
+          key: appBarKey,
           child: widget.appBar,
+          feedback: SizedBox(
+            width: 200,
+            height: 52,
+            child: widget.appBar,
+          ),
+          replacementActive: Container(
+            color: Colors.yellow,
+            width: double.infinity,
+          ),
+          replacementInactive: Container(
+            color: Colors.purple,
+            width: double.infinity,
+          ),
         ),
-        replacementActive: Container(
-          color: Colors.yellow,
-          width: double.infinity,
-        ),
-        replacementInactive: Container(
-          color: Colors.purple,
-          width: double.infinity,
-        ),
-      )),
+      ),
     );
   }
 
@@ -638,8 +640,9 @@ class _VisualScaffoldState extends VisualState<VisualScaffold> {
         WidgetProperty(
             name: "floatingActionButton",
             dynamicWidget: fabKey.currentState?.child),
-        WidgetProperty(
-            name: "appBar", dynamicWidget: appBarKey.currentState?.child),
+        if (appBarKey.currentState?.child != null)
+          WidgetProperty(
+              name: "appBar", dynamicWidget: appBarKey.currentState?.child),
       ];
 }
 
