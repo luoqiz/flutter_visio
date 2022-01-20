@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import 'components/visual_components.dart';
+import 'editor/components/list_components.dart';
+import 'editor/components/material_components.dart';
+import 'editor/components/visual_components.dart';
 
 var uuid = const Uuid();
 

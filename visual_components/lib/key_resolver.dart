@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'components/visual_components.dart';
+import 'editor/components/visual_components.dart';
+
 
 KeyResolver keyResolver = KeyResolver();
 

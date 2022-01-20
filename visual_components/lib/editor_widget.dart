@@ -1,11 +1,37 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'components/visual_components.dart';
+import 'package:grpc/grpc.dart';
+import 'package:provider/provider.dart';
+import 'package:visual_components/properties/property.dart';
+import 'package:visual_components/server/server.dart';
 import 'dynamic_widget.dart';
+import 'editor/components/material_components.dart';
+import 'editor/components/visual_components.dart';
 
-class VisualEditor extends StatelessWidget {
+class VisualEditor extends StatefulWidget {
   const VisualEditor({Key? key}) : super(key: key);
+
+  @override
+  _VisualEditorState createState() => _VisualEditorState();
+}
+
+class _VisualEditorState extends State<VisualEditor> {
+  // TODO clean up form here
+  final EditorServer editorServer = EditorServer();
+
+  @override
+  void initState() {
+    super.initState();
+    initServer();
+  }
+
+  Future initServer() async {
+    final server = Server([editorServer]);
+    await server.serve(port: 50051);
+    if (kDebugMode) {
+      print('Server listening on port ${server.port}...');
+    }
+  }
 
   // TODO, the editor should be able to simulate the same widgets in different
   // settings. Because of that we need to have a way to draw the same widget
@@ -16,29 +42,32 @@ class VisualEditor extends StatelessWidget {
   // times.
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        DragTarget<VisualStatefulWidget>(
-          builder: (context, it, it2) {
-            return Container(
-                width: 200,
-                height: double.infinity,
-                alignment: Alignment.center,
-                color: Colors.blue,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    RootDraggable(buildingBlock: test2),
-                    RootDraggable(buildingBlock: test3),
-                    RootDraggable(buildingBlock: test4),
-                    Expanded(child: RootDraggable(buildingBlock: test5)),
-                  ],
-                ));
-          },
-          onWillAccept: (it) => true,
-        ),
-        Expanded(child: AppWidget()),
-      ],
+    return Provider<EditorServer>(
+      create: (BuildContext context) => editorServer,
+      child: Row(
+        children: <Widget>[
+          DragTarget<VisualStatefulWidget>(
+            builder: (context, it, it2) {
+              return Container(
+                  width: 200,
+                  height: double.infinity,
+                  alignment: Alignment.center,
+                  color: Colors.blue,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RootDraggable(buildingBlock: test2),
+                      RootDraggable(buildingBlock: test3),
+                      RootDraggable(buildingBlock: test4),
+                      Expanded(child: RootDraggable(buildingBlock: test5)),
+                    ],
+                  ));
+            },
+            onWillAccept: (it) => true,
+          ),
+          Expanded(child: AppWidget()),
+        ],
+      ),
     );
   }
 }
@@ -57,7 +86,9 @@ class RootDraggable extends StatelessWidget {
       feedback: buildingBlock.representation,
       child: buildingBlock.representation,
       onDragStarted: () {
-        print("Started inital drag with id ${buildingBlock.visualWidget.id}");
+        if (kDebugMode) {
+          print("Started inital drag with id ${buildingBlock.visualWidget.id}");
+        }
       },
     );
   }
@@ -76,9 +107,11 @@ class AppWidget extends StatelessWidget {
         id: "YOOOO",
         floatingActionButton: VisualFloatingActionButton(
             id: "BLUB",
-            properties: [
-              Property(name: "onPressed", value: '(){\nprint("Hey!");\n}'),
-            ],
+            // TODO need
+            properties: {
+              "onPressed":
+                  UnknownProperty(sourceCode: '(){\nprint("Hey!");\n}'),
+            },
             onPressed: () {
               print("Hey!");
             }),
