@@ -9,18 +9,20 @@ class VisualContainer extends VisualStatefulWidget {
       this.width,
       this.height,
       this.child,
+      this.constraints,
       Map<String, property.Property>? properties,
       List<WidgetProperty>? widgetProperties})
       : super(
             id: id,
             key: GlobalKey<VisualState>(),
-            properties: properties,
-            widgetProperties: widgetProperties);
+            properties: properties ?? const {},
+            widgetProperties: widgetProperties ?? const []);
 
   final Widget? child;
   final Color color;
   final double? width;
   final double? height;
+  final BoxConstraints? constraints;
 
   @override
   _VisualContainerState createState() => _VisualContainerState();
@@ -35,36 +37,35 @@ class _VisualContainerState extends VisualState<VisualContainer> {
   @override
   Widget buildWidget(BuildContext context) {
     return Container(
-      child: LayoutDragTarget(
-          key: childKey,
-          replacementActive: Container(
-            height: 10,
-            width: 10,
-            color: Colors.orange,
-          ),
-          replacementInactive: Container(
-            height: 10,
-            width: 10,
-            color: Colors.indigo,
-          ),
-          child: widget.child),
+      child: LayoutDragTarget(key: childKey, child: widget.child),
       color: getValue<Color>('color'),
-      height: widget.height,
-      width: widget.width,
+      width: getValue<double>('width'),
+      height: getValue<double>('height'),
+      padding: getValue<EdgeInsets>('padding'),
+      margin: getValue<EdgeInsets>('margin'),
+      alignment: getValue<Alignment>('alignment'),
+      constraints: getValue<BoxConstraints>('constraints'),
     );
   }
 
   @override
   List<WidgetProperty> get modifiedWidgetProperties => [
-        WidgetProperty(
-          name: "child",
-          dynamicWidget: childKey.currentState?.child,
-        ),
+        if (childKey.currentState!.child != null)
+          WidgetProperty(
+            name: "child",
+            dynamicWidget: childKey.currentState!.child!,
+          ),
       ];
 
   @override
-  Map<String, property.Property> get remoteValues => {
-        "color": property.ColorProperty(color: widget.color),
+  Map<String, property.Property> initRemoteValues() => {
+        'color': property.ColorProperty(color: widget.color),
+        'width': property.DoubleProperty(data: widget.width!),
+        'height': property.DoubleProperty(data: widget.height!),
+        'alignment': property.AlignmentProperty(alignment: Alignment.center),
+        'padding': property.EdgeInsertsProperty(data: EdgeInsets.all(0)),
+        'margin': property.EdgeInsertsProperty(data: EdgeInsets.all(0)),
+        'constraints': property.BoxConstraintsProperty(data: BoxConstraints()),
       };
 }
 
@@ -159,16 +160,6 @@ class _VisualFloatingActionButtonState
       child: LayoutDragTarget(
         key: childKey,
         child: widget.child,
-        replacementActive: Container(
-          width: 20,
-          height: 20,
-          color: Colors.yellow,
-        ),
-        replacementInactive: Container(
-          width: 20,
-          height: 20,
-          color: Colors.red,
-        ),
       ),
       backgroundColor: widget.backgroundColor,
       elevation: widget.elevation,
@@ -189,13 +180,12 @@ class _VisualFloatingActionButtonState
         if (childKey.currentState?.child != null)
           WidgetProperty(
             name: "child",
-            dynamicWidget: childKey.currentState?.child,
+            dynamicWidget: childKey.currentState!.child!,
           ),
       ];
 
   @override
-  // TODO: implement remoteValues
-  Map<String, property.Property>? get remoteValues => null;
+  Map<String, property.Property> initRemoteValues() => {};
 }
 
 class VisualScaffold extends VisualStatefulWidget {
@@ -218,15 +208,15 @@ class VisualScaffold extends VisualStatefulWidget {
     List<WidgetProperty>? widgetProperties,
     required String id,
   }) : super(
-            key: GlobalKey<VisualState>(),
+            key: GlobalObjectKey<VisualState>(id),
             id: id,
             properties: properties ?? const {},
             widgetProperties: widgetProperties ??
                 [
-                  WidgetProperty(name: "body", dynamicWidget: body),
+                  WidgetProperty(name: "body", dynamicWidget: body!),
                   WidgetProperty(
                       name: "floatingActionButton",
-                      dynamicWidget: floatingActionButton)
+                      dynamicWidget: floatingActionButton!)
                 ]);
 
   final bool? visualMode;
@@ -281,21 +271,10 @@ class _VisualScaffoldState extends VisualState<VisualScaffold> {
       body: LayoutDragTarget(
         key: bodyKey,
         child: widget.body,
-        replacementActive: Container(
-          constraints: const BoxConstraints.expand(),
-          color: Colors.yellow,
-        ),
-        replacementInactive: Container(
-          constraints: const BoxConstraints.expand(),
-          color: Colors.red,
-        ),
       ),
       floatingActionButton: LayoutDragTarget(
         key: fabKey,
         child: widget.floatingActionButton,
-        replacementActive: Container(height: 50, width: 50, color: Colors.blue),
-        replacementInactive:
-            Container(height: 50, width: 50, color: Colors.pink),
       ),
       appBar: AppBarHeightWidgetWidget(
         child: LayoutDragTarget(
@@ -306,14 +285,6 @@ class _VisualScaffoldState extends VisualState<VisualScaffold> {
             height: 52,
             child: widget.appBar,
           ),
-          replacementActive: Container(
-            color: Colors.yellow,
-            width: double.infinity,
-          ),
-          replacementInactive: Container(
-            color: Colors.purple,
-            width: double.infinity,
-          ),
         ),
       ),
     );
@@ -321,19 +292,20 @@ class _VisualScaffoldState extends VisualState<VisualScaffold> {
 
   @override
   List<WidgetProperty> get modifiedWidgetProperties => [
-        WidgetProperty(
-            name: "body", dynamicWidget: bodyKey.currentState?.child),
-        WidgetProperty(
-            name: "floatingActionButton",
-            dynamicWidget: fabKey.currentState?.child),
-        if (appBarKey.currentState?.child != null)
+        if (bodyKey.currentState!.child != null)
           WidgetProperty(
-              name: "appBar", dynamicWidget: appBarKey.currentState?.child),
+              name: "body", dynamicWidget: bodyKey.currentState!.child!),
+        if (fabKey.currentState!.child != null)
+          WidgetProperty(
+              name: "floatingActionButton",
+              dynamicWidget: fabKey.currentState!.child!),
+        if (appBarKey.currentState!.child != null)
+          WidgetProperty(
+              name: "appBar", dynamicWidget: appBarKey.currentState!.child!),
       ];
 
   @override
-  // TODO: implement remoteValues
-  Map<String, property.Property>? get remoteValues => null;
+  Map<String, property.Property> initRemoteValues() => {};
 }
 
 class AppBarHeightWidgetWidget extends StatelessWidget

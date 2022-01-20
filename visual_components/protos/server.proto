@@ -17,22 +17,32 @@ service Server {
 
     rpc StreamSelected(SelectStream) returns (stream SelectedWidgetWithProperties ) {}
 
+    rpc StreamSourceCode(InitSourceCodeStream) returns (stream SourceCode){}
+
 
 }
 
+message SourceCode {
+    string sourceCode = 1;
+}
+
+message InitSourceCodeStream {
+
+}
 
 message FieldUpdate {
-    Field field = 1;
-    string id = 2;
+    string id = 1;
+    string propertyName = 2;
+    string property = 3;
 }
 
 message Field {
 
-    oneof it {
-        DoubleField double = 1;
-        AlignmentField align = 2;
-        ColorField color = 3;
-    }
+    /* oneof it {
+         DoubleField double = 1;
+         AlignmentField align = 2;
+         ColorField color = 3;
+     }*/
 }
 
 
@@ -74,8 +84,14 @@ message SelectStream {
 
 }
 
+
 message SelectedWidgetWithProperties {
+    // The id of the widget
     string id = 1;
+
+    // A string reprensetation of the widget type
     string type = 2;
-    map<string, Field> properties = 3;
+
+    /// Json encoded
+    map<string, string> properties = 3;
 }

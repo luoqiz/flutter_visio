@@ -8,32 +8,42 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use sourceCodeDescriptor instead')
+const SourceCode$json = const {
+  '1': 'SourceCode',
+  '2': const [
+    const {'1': 'sourceCode', '3': 1, '4': 1, '5': 9, '10': 'sourceCode'},
+  ],
+};
+
+/// Descriptor for `SourceCode`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List sourceCodeDescriptor = $convert.base64Decode('CgpTb3VyY2VDb2RlEh4KCnNvdXJjZUNvZGUYASABKAlSCnNvdXJjZUNvZGU=');
+@$core.Deprecated('Use initSourceCodeStreamDescriptor instead')
+const InitSourceCodeStream$json = const {
+  '1': 'InitSourceCodeStream',
+};
+
+/// Descriptor for `InitSourceCodeStream`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List initSourceCodeStreamDescriptor = $convert.base64Decode('ChRJbml0U291cmNlQ29kZVN0cmVhbQ==');
 @$core.Deprecated('Use fieldUpdateDescriptor instead')
 const FieldUpdate$json = const {
   '1': 'FieldUpdate',
   '2': const [
-    const {'1': 'field', '3': 1, '4': 1, '5': 11, '6': '.helloworld.Field', '10': 'field'},
-    const {'1': 'id', '3': 2, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'propertyName', '3': 2, '4': 1, '5': 9, '10': 'propertyName'},
+    const {'1': 'property', '3': 3, '4': 1, '5': 9, '10': 'property'},
   ],
 };
 
 /// Descriptor for `FieldUpdate`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List fieldUpdateDescriptor = $convert.base64Decode('CgtGaWVsZFVwZGF0ZRInCgVmaWVsZBgBIAEoCzIRLmhlbGxvd29ybGQuRmllbGRSBWZpZWxkEg4KAmlkGAIgASgJUgJpZA==');
+final $typed_data.Uint8List fieldUpdateDescriptor = $convert.base64Decode('CgtGaWVsZFVwZGF0ZRIOCgJpZBgBIAEoCVICaWQSIgoMcHJvcGVydHlOYW1lGAIgASgJUgxwcm9wZXJ0eU5hbWUSGgoIcHJvcGVydHkYAyABKAlSCHByb3BlcnR5');
 @$core.Deprecated('Use fieldDescriptor instead')
 const Field$json = const {
   '1': 'Field',
-  '2': const [
-    const {'1': 'double', '3': 1, '4': 1, '5': 11, '6': '.helloworld.DoubleField', '9': 0, '10': 'double'},
-    const {'1': 'align', '3': 2, '4': 1, '5': 11, '6': '.helloworld.AlignmentField', '9': 0, '10': 'align'},
-    const {'1': 'color', '3': 3, '4': 1, '5': 11, '6': '.helloworld.ColorField', '9': 0, '10': 'color'},
-  ],
-  '8': const [
-    const {'1': 'it'},
-  ],
 };
 
 /// Descriptor for `Field`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List fieldDescriptor = $convert.base64Decode('CgVGaWVsZBIxCgZkb3VibGUYASABKAsyFy5oZWxsb3dvcmxkLkRvdWJsZUZpZWxkSABSBmRvdWJsZRIyCgVhbGlnbhgCIAEoCzIaLmhlbGxvd29ybGQuQWxpZ25tZW50RmllbGRIAFIFYWxpZ24SLgoFY29sb3IYAyABKAsyFi5oZWxsb3dvcmxkLkNvbG9yRmllbGRIAFIFY29sb3JCBAoCaXQ=');
+final $typed_data.Uint8List fieldDescriptor = $convert.base64Decode('CgVGaWVsZA==');
 @$core.Deprecated('Use doubleFieldDescriptor instead')
 const DoubleField$json = const {
   '1': 'DoubleField',
@@ -140,10 +150,10 @@ const SelectedWidgetWithProperties_PropertiesEntry$json = const {
   '1': 'PropertiesEntry',
   '2': const [
     const {'1': 'key', '3': 1, '4': 1, '5': 9, '10': 'key'},
-    const {'1': 'value', '3': 2, '4': 1, '5': 11, '6': '.helloworld.Field', '10': 'value'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 9, '10': 'value'},
   ],
   '7': const {'7': true},
 };
 
 /// Descriptor for `SelectedWidgetWithProperties`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List selectedWidgetWithPropertiesDescriptor = $convert.base64Decode('ChxTZWxlY3RlZFdpZGdldFdpdGhQcm9wZXJ0aWVzEg4KAmlkGAEgASgJUgJpZBISCgR0eXBlGAIgASgJUgR0eXBlElgKCnByb3BlcnRpZXMYAyADKAsyOC5oZWxsb3dvcmxkLlNlbGVjdGVkV2lkZ2V0V2l0aFByb3BlcnRpZXMuUHJvcGVydGllc0VudHJ5Ugpwcm9wZXJ0aWVzGlAKD1Byb3BlcnRpZXNFbnRyeRIQCgNrZXkYASABKAlSA2tleRInCgV2YWx1ZRgCIAEoCzIRLmhlbGxvd29ybGQuRmllbGRSBXZhbHVlOgI4AQ==');
+final $typed_data.Uint8List selectedWidgetWithPropertiesDescriptor = $convert.base64Decode('ChxTZWxlY3RlZFdpZGdldFdpdGhQcm9wZXJ0aWVzEg4KAmlkGAEgASgJUgJpZBISCgR0eXBlGAIgASgJUgR0eXBlElgKCnByb3BlcnRpZXMYAyADKAsyOC5oZWxsb3dvcmxkLlNlbGVjdGVkV2lkZ2V0V2l0aFByb3BlcnRpZXMuUHJvcGVydGllc0VudHJ5Ugpwcm9wZXJ0aWVzGj0KD1Byb3BlcnRpZXNFbnRyeRIQCgNrZXkYASABKAlSA2tleRIUCgV2YWx1ZRgCIAEoCVIFdmFsdWU6AjgB');

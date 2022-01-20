@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:visual_components/editor/components/visual_components.dart';
 import 'package:visual_components/properties/property.dart';
 
-
 mixin _ListComponentMixin<T extends VisualStatefulWidget> on VisualState<T> {
-
   List<GlobalKey<VisualState>> keys = [GlobalKey()];
 
-
   List<Widget> _getChildren() {
-    if(keys.length == 1) {
+    if (keys.length == 1) {
       return [_getTargetWidget(keys[0], first: true)];
     }
 
@@ -18,12 +15,10 @@ mixin _ListComponentMixin<T extends VisualStatefulWidget> on VisualState<T> {
     }).toList();
   }
 
-
-
   Widget _getTargetWidget(GlobalKey<VisualState> key, {bool first = false}) {
-    Widget result =  LayoutDragTarget(
+    Widget result = LayoutDragTarget(
         onLeave: () {
-          if(!keys.contains(key)) return;
+          if (!keys.contains(key)) return;
           setState(() {
             int index = keys.indexOf(key);
             keys.removeAt(index);
@@ -33,27 +28,22 @@ mixin _ListComponentMixin<T extends VisualStatefulWidget> on VisualState<T> {
         onAccept: () {
           setState(() {
             int index = keys.indexOf(key);
-            keys.insert(index + 1 , GlobalKey());
+            keys.insert(index + 1, GlobalKey());
             keys.insert(index, GlobalKey());
           });
         },
         key: key,
-        replacementActive: Container(
-          margin: const EdgeInsets.all(8),
-          height: 20,
-          width: 100,
-          color: Colors.indigo,
+        replacementActive: const Placeholder(
+          color: Colors.green,
+          fallbackHeight: 20,
         ),
-        replacementInactive: Container(
-          margin: const EdgeInsets.all(8),
-          height: 5,
-          width: 100,
-          color: Colors.orange,
+        replacementInactive: const Placeholder(
+          color: Colors.blue,
+          fallbackHeight: 20,
         ),
-        child: null
-    );
+        child: null);
 
-    if(first) {
+    if (first) {
       return SizedBox(
         height: 40,
         child: result,
@@ -61,10 +51,7 @@ mixin _ListComponentMixin<T extends VisualStatefulWidget> on VisualState<T> {
     }
     return result;
   }
-
 }
-
-
 
 class VisualColumn extends VisualStatefulWidget {
   VisualColumn({
@@ -79,10 +66,10 @@ class VisualColumn extends VisualStatefulWidget {
     Map<String, Property>? properties,
     List<WidgetProperty>? widgetProperties,
   }) : super(
-      id: id,
-      key: GlobalKey<VisualState>(),
-      properties: properties,
-      widgetProperties: widgetProperties);
+            id: id,
+            key: GlobalObjectKey<VisualState>(id),
+            properties: properties ?? const {},
+            widgetProperties: widgetProperties ?? const []);
 
   final MainAxisAlignment mainAxisAlignment;
   final MainAxisSize mainAxisSize;
@@ -99,8 +86,8 @@ class VisualColumn extends VisualStatefulWidget {
   String get originalClassName => "Column";
 }
 
-class _VisualColumnState extends VisualState<VisualColumn> with _ListComponentMixin{
-
+class _VisualColumnState extends VisualState<VisualColumn>
+    with _ListComponentMixin {
   @override
   List<WidgetProperty>? get modifiedWidgetProperties => null;
 
@@ -116,6 +103,7 @@ class _VisualColumnState extends VisualState<VisualColumn> with _ListComponentMi
       children: _getChildren(),
     );
   }
+
   @override
-  Map<String, Property>? get remoteValues => null;
+  Map<String, Property> initRemoteValues() => {};
 }

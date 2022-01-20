@@ -2,11 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 import 'package:provider/provider.dart';
+import 'package:visual_components/editor/widget_palette/palette.dart';
+import 'package:visual_components/generated/server.pb.dart';
 import 'package:visual_components/properties/property.dart';
 import 'package:visual_components/server/server.dart';
-import 'dynamic_widget.dart';
-import 'editor/components/material_components.dart';
-import 'editor/components/visual_components.dart';
+
+import 'components/material_components.dart';
+import 'components/visual_components.dart';
 
 class VisualEditor extends StatefulWidget {
   const VisualEditor({Key? key}) : super(key: key);
@@ -48,20 +50,7 @@ class _VisualEditorState extends State<VisualEditor> {
         children: <Widget>[
           DragTarget<VisualStatefulWidget>(
             builder: (context, it, it2) {
-              return Container(
-                  width: 200,
-                  height: double.infinity,
-                  alignment: Alignment.center,
-                  color: Colors.blue,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RootDraggable(buildingBlock: test2),
-                      RootDraggable(buildingBlock: test3),
-                      RootDraggable(buildingBlock: test4),
-                      Expanded(child: RootDraggable(buildingBlock: test5)),
-                    ],
-                  ));
+              return WidgetPalette();
             },
             onWillAccept: (it) => true,
           ),
@@ -72,36 +61,42 @@ class _VisualEditorState extends State<VisualEditor> {
   }
 }
 
-class RootDraggable extends StatelessWidget {
-  const RootDraggable({Key? key, required this.buildingBlock})
-      : super(key: key);
-
-  final BuildingBlock buildingBlock;
-
-  @override
-  Widget build(BuildContext context) {
-    return Draggable<VisualStatefulWidget>(
-      childWhenDragging: buildingBlock.representation,
-      data: buildingBlock.visualWidget,
-      feedback: buildingBlock.representation,
-      child: buildingBlock.representation,
-      onDragStarted: () {
-        if (kDebugMode) {
-          print("Started inital drag with id ${buildingBlock.visualWidget.id}");
-        }
-      },
-    );
-  }
-}
+// class RootDraggable extends StatelessWidget {
+//   const RootDraggable({Key? key, required this.buildingBlock})
+//       : super(key: key);
+//
+//   final BuildingBlock buildingBlock;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Draggable<VisualStatefulWidget>(
+//       childWhenDragging: buildingBlock.representation,
+//       data: buildingBlock.visualWidget,
+//       feedback: buildingBlock.representation,
+//       child: buildingBlock.representation,
+//       onDragStarted: () {
+//         if (kDebugMode) {
+//           print("Started inital drag with id ${buildingBlock.visualWidget.id}");
+//         }
+//       },
+//     );
+//   }
+// }
 
 class AppWidget extends StatelessWidget {
   final GlobalKey<VisualRootState> rootKey = GlobalKey();
 
   AppWidget({Key? key}) : super(key: key);
 
+  void onChanged() {
+    String? source = rootKey.currentState?.buildSourceCode();
+    editorServer.updateSourceCode.add(SourceCode()..sourceCode = source!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisualRoot(
+      onChanged: onChanged,
       key: rootKey,
       child: VisualScaffold(
         id: "YOOOO",

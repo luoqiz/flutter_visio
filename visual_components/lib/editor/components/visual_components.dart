@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:visual_components/generated/server.pb.dart';
 import 'package:visual_components/properties/property.dart';
 import 'package:visual_components/server/server.dart';
 
-import '../../key_resolver.dart';
+import '../key_resolver.dart';
 
 abstract class VisualStatefulWidget extends StatefulWidget {
   const VisualStatefulWidget(
@@ -13,7 +16,9 @@ abstract class VisualStatefulWidget extends StatefulWidget {
       this.properties = const {},
       this.widgetProperties = const [],
       required this.id})
-      : super(key: key);
+      : assert(widgetProperties != null),
+        assert(properties != null),
+        super(key: key);
 
   /// This is needed in the constructor because we need to save the widget properties so we can restore the source code during runtime
   ///
@@ -65,6 +70,10 @@ abstract class VisualState<T extends VisualStatefulWidget> extends State<T>
 
   @override
   Widget build(BuildContext context) {
+    // TODO a widget becomes tappable (can modify local state etc) when
+    // a key modifier is pressed (for example strg). When that happens
+    // the ignore pointer will be removed else it is there and the IDE
+    // can intercept the events
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -79,7 +88,11 @@ abstract class VisualState<T extends VisualStatefulWidget> extends State<T>
       ..id = widget.id
       ..type = widget.originalClassName;
 
-    var field = Field();
+    for (var key in remoteValues.keys) {
+      Property property = remoteValues[key]!;
+      result.properties[key] = json.encode(property.toMap());
+    }
+    print("Sending $result");
     server.updateSubject.add(result);
   }
 
@@ -94,19 +107,18 @@ abstract class VisualState<T extends VisualStatefulWidget> extends State<T>
   /// It does it by first looking at all the parameters which are not widgets (which need no recursive steps)
   /// and then at the Dynamic widgets.
   String buildSourceCode() {
-    return "Comment back in because this slows down code, but it looks cool";
-    // return '${widget.originalClassName}(\n'
-    //     '${widget.properties?.map((it) => '${it.name}:${it.value}').join(",\n")}\n'
-    //     '${modifiedWidgetProperties?.map((it) {
-    //   WidgetProperty? that = it;
-    //   if (it.dynamicWidget == null) {
-    //     that =
-    //         widget.widgetProperties?.firstWhere((prop) => prop.name == it.name);
-    //     if (that == null) return '';
-    //   }
-    //   return '${that.name}:${keyResolver.map[that.dynamicWidget?.id]?.currentState?.buildSourceCode()}';
-    // }).join(",\n")}'
-    //     ')';
+    return '${widget.originalClassName}(\n'
+        '${widget.properties?.map((key, value) => MapEntry(key, '$key:${value.sourceCode}')).values.join(",\n")}\n'
+        '${modifiedWidgetProperties?.map((it) {
+      WidgetProperty? that = it;
+      if (it.dynamicWidget == null) {
+        that =
+            widget.widgetProperties?.firstWhere((prop) => prop.name == it.name);
+        if (that == null) return '';
+      }
+      return '${that.name}:${keyResolver.map[that.dynamicWidget.id]?.currentState?.buildSourceCode()}';
+    }).join(",\n")}'
+        ')';
   }
 }
 
@@ -118,40 +130,50 @@ abstract class VisualState<T extends VisualStatefulWidget> extends State<T>
 //   }
 // }
 
+mixin PropertyStateMixin<T extends VisualStatefulWidget> on State<T> {
+  /// TODO, this is a map, widgets is a list - choose one
+  late Map<String, Property> remoteValues;
+
+  Map<String, Property> initRemoteValues();
+
+  @override
+  void initState() {
+    super.initState();
+    remoteValues = initRemoteValues();
+  }
+
+  void setValue<K>(String key, K value) {
+    if (remoteValues[key]?.data.runtimeType != value.runtimeType) {
+      throw Exception(
+          "${remoteValues[key]?.data.runtimeType} and ${value.runtimeType}"
+          "do not have the same runtime type");
+    }
+    setState(() {
+      remoteValues[key]?.data = value;
+    });
+  }
+
+  K getValue<K>(String key) {
+    return remoteValues[key]?.data;
+  }
+}
+
 /// This is a property involving a layout widget.
 ///
 /// The difference to the Property is that this does not actually contain any code,
 /// it only contains a Visual widget which in turn has Properties and WidgetProperties
 class WidgetProperty {
-  WidgetProperty({this.name, this.dynamicWidget});
+  WidgetProperty({required this.name, required this.dynamicWidget});
 
-  final String? name;
-  final VisualStatefulWidget? dynamicWidget;
-}
-
-mixin PropertyStateMixin<T extends VisualStatefulWidget> on State<T> {
-  /// TODO, this is a map, widgets is a list - choose one
-  Map<String, Property>? get remoteValues;
-
-  void setValue<K>(String key, K value) {
-    if (remoteValues![key]?.data.runtimeType != value.runtimeType) {
-      throw Exception(
-          "${remoteValues![key]?.data.runtimeType} and ${value.runtimeType}"
-          "do not have the same runtime type");
-    }
-    setState(() {
-      remoteValues![key]?.data = value;
-    });
-  }
-
-  K getValue<K>(String key) {
-    return remoteValues![key]?.data;
-  }
+  final String name;
+  final VisualStatefulWidget dynamicWidget;
 }
 
 class VisualRoot extends StatefulWidget {
-  const VisualRoot({Key? key, required this.child}) : super(key: key);
+  const VisualRoot({Key? key, required this.child, required this.onChanged})
+      : super(key: key);
   final VisualStatefulWidget child;
+  final VoidCallback onChanged;
 
   @override
   VisualRootState createState() => VisualRootState();
@@ -168,7 +190,37 @@ class VisualRootState extends State<VisualRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return SomethingChanged(onChange: widget.onChanged, child: widget.child);
+  }
+}
+
+/// Used to notify the widget tree changed and thus the source code
+/// needs to updated.
+///
+/// This is called when:
+/// 1. A widget is inserted/deleted or moved
+/// 2. A property is changed
+///
+/// To make adaption easier, instead of making the client invalidate itself
+/// it gets a stream over the grpc connection delivering the latest source code
+/// each change.
+class SomethingChanged extends InheritedWidget {
+  const SomethingChanged({
+    required this.onChange,
+    required Widget child,
+  }) : super(child: child);
+
+  final VoidCallback onChange;
+
+  static void notify(BuildContext context) {
+    SomethingChanged it =
+        context.dependOnInheritedWidgetOfExactType<SomethingChanged>()!;
+    it.onChange();
+  }
+
+  @override
+  bool updateShouldNotify(SomethingChanged oldWidget) {
+    return true;
   }
 }
 
@@ -203,7 +255,7 @@ class _VisualWrapperState extends VisualState<VisualWrapper> {
   List<WidgetProperty> get modifiedWidgetProperties => [];
 
   @override
-  Map<String, Property> get remoteValues => {};
+  Map<String, Property> initRemoteValues() => {};
 }
 
 class VisualProxyWrapper extends VisualStatefulWidget {
@@ -243,16 +295,19 @@ class _VisualProxyWrapperState extends VisualState<VisualProxyWrapper> {
   bool get shouldRegister => false;
 
   @override
-  Map<String, Property>? get remoteValues =>
-      keyResolver.map[widget.visualWidget.id]?.currentState?.remoteValues;
+  Map<String, Property> initRemoteValues() => {};
 }
 
 // TODO need a way to restore the state
 class LayoutDragTarget extends StatefulWidget {
   const LayoutDragTarget(
       {Key? key,
-      required this.replacementActive,
-      required this.replacementInactive,
+      this.replacementActive = const Placeholder(
+        color: Colors.green,
+      ),
+      this.replacementInactive = const Placeholder(
+        color: Colors.blue,
+      ),
       required this.child,
       this.onAccept,
       this.onLeave,
@@ -442,6 +497,10 @@ class LayoutDragTargetState extends State<LayoutDragTarget> {
             if (widget.onAccept != null) {
               widget.onAccept!();
             }
+
+            SchedulerBinding.instance?.addPostFrameCallback((_) {
+              SomethingChanged.notify(context);
+            });
 
             setState(() {
               child = wrapInVisualDraggable(dynamicWidget);

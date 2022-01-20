@@ -36,6 +36,11 @@ class ServerClient extends $grpc.Client {
           ($0.SelectStream value) => value.writeToBuffer(),
           ($core.List<$core.int> value) =>
               $0.SelectedWidgetWithProperties.fromBuffer(value));
+  static final _$streamSourceCode =
+      $grpc.ClientMethod<$0.InitSourceCodeStream, $0.SourceCode>(
+          '/helloworld.Server/StreamSourceCode',
+          ($0.InitSourceCodeStream value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.SourceCode.fromBuffer(value));
 
   ServerClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -66,6 +71,14 @@ class ServerClient extends $grpc.Client {
       {$grpc.CallOptions? options}) {
     return $createStreamingCall(
         _$streamSelected, $async.Stream.fromIterable([request]),
+        options: options);
+  }
+
+  $grpc.ResponseStream<$0.SourceCode> streamSourceCode(
+      $0.InitSourceCodeStream request,
+      {$grpc.CallOptions? options}) {
+    return $createStreamingCall(
+        _$streamSourceCode, $async.Stream.fromIterable([request]),
         options: options);
   }
 }
@@ -104,6 +117,14 @@ abstract class ServerServiceBase extends $grpc.Service {
             true,
             ($core.List<$core.int> value) => $0.SelectStream.fromBuffer(value),
             ($0.SelectedWidgetWithProperties value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.InitSourceCodeStream, $0.SourceCode>(
+        'StreamSourceCode',
+        streamSourceCode_Pre,
+        false,
+        true,
+        ($core.List<$core.int> value) =>
+            $0.InitSourceCodeStream.fromBuffer(value),
+        ($0.SourceCode value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.HelloReply> initialize_Pre($grpc.ServiceCall call,
@@ -121,6 +142,11 @@ abstract class ServerServiceBase extends $grpc.Service {
     yield* streamSelected(call, await request);
   }
 
+  $async.Stream<$0.SourceCode> streamSourceCode_Pre($grpc.ServiceCall call,
+      $async.Future<$0.InitSourceCodeStream> request) async* {
+    yield* streamSourceCode(call, await request);
+  }
+
   $async.Future<$0.HelloReply> initialize(
       $grpc.ServiceCall call, $0.InitializeFileRequest request);
   $async.Future<$0.GetFieldsResponse> getFields(
@@ -129,4 +155,6 @@ abstract class ServerServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $async.Stream<$0.FieldUpdate> request);
   $async.Stream<$0.SelectedWidgetWithProperties> streamSelected(
       $grpc.ServiceCall call, $0.SelectStream request);
+  $async.Stream<$0.SourceCode> streamSourceCode(
+      $grpc.ServiceCall call, $0.InitSourceCodeStream request);
 }

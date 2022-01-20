@@ -9,24 +9,105 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class SourceCode extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SourceCode', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'helloworld'), createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sourceCode', protoName: 'sourceCode')
+    ..hasRequiredFields = false
+  ;
+
+  SourceCode._() : super();
+  factory SourceCode({
+    $core.String? sourceCode,
+  }) {
+    final _result = create();
+    if (sourceCode != null) {
+      _result.sourceCode = sourceCode;
+    }
+    return _result;
+  }
+  factory SourceCode.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory SourceCode.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  SourceCode clone() => SourceCode()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  SourceCode copyWith(void Function(SourceCode) updates) => super.copyWith((message) => updates(message as SourceCode)) as SourceCode; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static SourceCode create() => SourceCode._();
+  SourceCode createEmptyInstance() => create();
+  static $pb.PbList<SourceCode> createRepeated() => $pb.PbList<SourceCode>();
+  @$core.pragma('dart2js:noInline')
+  static SourceCode getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<SourceCode>(create);
+  static SourceCode? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get sourceCode => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set sourceCode($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSourceCode() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSourceCode() => clearField(1);
+}
+
+class InitSourceCodeStream extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'InitSourceCodeStream', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'helloworld'), createEmptyInstance: create)
+    ..hasRequiredFields = false
+  ;
+
+  InitSourceCodeStream._() : super();
+  factory InitSourceCodeStream() => create();
+  factory InitSourceCodeStream.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory InitSourceCodeStream.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  InitSourceCodeStream clone() => InitSourceCodeStream()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  InitSourceCodeStream copyWith(void Function(InitSourceCodeStream) updates) => super.copyWith((message) => updates(message as InitSourceCodeStream)) as InitSourceCodeStream; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static InitSourceCodeStream create() => InitSourceCodeStream._();
+  InitSourceCodeStream createEmptyInstance() => create();
+  static $pb.PbList<InitSourceCodeStream> createRepeated() => $pb.PbList<InitSourceCodeStream>();
+  @$core.pragma('dart2js:noInline')
+  static InitSourceCodeStream getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<InitSourceCodeStream>(create);
+  static InitSourceCodeStream? _defaultInstance;
+}
+
 class FieldUpdate extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'FieldUpdate', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'helloworld'), createEmptyInstance: create)
-    ..aOM<Field>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'field', subBuilder: Field.create)
-    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'propertyName', protoName: 'propertyName')
+    ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'property')
     ..hasRequiredFields = false
   ;
 
   FieldUpdate._() : super();
   factory FieldUpdate({
-    Field? field_1,
     $core.String? id,
+    $core.String? propertyName,
+    $core.String? property,
   }) {
     final _result = create();
-    if (field_1 != null) {
-      _result.field_1 = field_1;
-    }
     if (id != null) {
       _result.id = id;
+    }
+    if (propertyName != null) {
+      _result.propertyName = propertyName;
+    }
+    if (property != null) {
+      _result.property = property;
     }
     return _result;
   }
@@ -52,66 +133,40 @@ class FieldUpdate extends $pb.GeneratedMessage {
   static FieldUpdate? _defaultInstance;
 
   @$pb.TagNumber(1)
-  Field get field_1 => $_getN(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set field_1(Field v) { setField(1, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasField_1() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearField_1() => clearField(1);
-  @$pb.TagNumber(1)
-  Field ensureField_1() => $_ensure(0);
+  void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.String get id => $_getSZ(1);
+  $core.String get propertyName => $_getSZ(1);
   @$pb.TagNumber(2)
-  set id($core.String v) { $_setString(1, v); }
+  set propertyName($core.String v) { $_setString(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasId() => $_has(1);
+  $core.bool hasPropertyName() => $_has(1);
   @$pb.TagNumber(2)
-  void clearId() => clearField(2);
-}
+  void clearPropertyName() => clearField(2);
 
-enum Field_It {
-  double_1, 
-  align, 
-  color, 
-  notSet
+  @$pb.TagNumber(3)
+  $core.String get property => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set property($core.String v) { $_setString(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasProperty() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearProperty() => clearField(3);
 }
 
 class Field extends $pb.GeneratedMessage {
-  static const $core.Map<$core.int, Field_It> _Field_ItByTag = {
-    1 : Field_It.double_1,
-    2 : Field_It.align,
-    3 : Field_It.color,
-    0 : Field_It.notSet
-  };
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Field', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'helloworld'), createEmptyInstance: create)
-    ..oo(0, [1, 2, 3])
-    ..aOM<DoubleField>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'double', subBuilder: DoubleField.create)
-    ..aOM<AlignmentField>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'align', subBuilder: AlignmentField.create)
-    ..aOM<ColorField>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'color', subBuilder: ColorField.create)
     ..hasRequiredFields = false
   ;
 
   Field._() : super();
-  factory Field({
-    DoubleField? double_1,
-    AlignmentField? align,
-    ColorField? color,
-  }) {
-    final _result = create();
-    if (double_1 != null) {
-      _result.double_1 = double_1;
-    }
-    if (align != null) {
-      _result.align = align;
-    }
-    if (color != null) {
-      _result.color = color;
-    }
-    return _result;
-  }
+  factory Field() => create();
   factory Field.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
   factory Field.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
@@ -132,42 +187,6 @@ class Field extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static Field getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Field>(create);
   static Field? _defaultInstance;
-
-  Field_It whichIt() => _Field_ItByTag[$_whichOneof(0)]!;
-  void clearIt() => clearField($_whichOneof(0));
-
-  @$pb.TagNumber(1)
-  DoubleField get double_1 => $_getN(0);
-  @$pb.TagNumber(1)
-  set double_1(DoubleField v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasDouble_1() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearDouble_1() => clearField(1);
-  @$pb.TagNumber(1)
-  DoubleField ensureDouble_1() => $_ensure(0);
-
-  @$pb.TagNumber(2)
-  AlignmentField get align => $_getN(1);
-  @$pb.TagNumber(2)
-  set align(AlignmentField v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasAlign() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearAlign() => clearField(2);
-  @$pb.TagNumber(2)
-  AlignmentField ensureAlign() => $_ensure(1);
-
-  @$pb.TagNumber(3)
-  ColorField get color => $_getN(2);
-  @$pb.TagNumber(3)
-  set color(ColorField v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasColor() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearColor() => clearField(3);
-  @$pb.TagNumber(3)
-  ColorField ensureColor() => $_ensure(2);
 }
 
 class DoubleField extends $pb.GeneratedMessage {
@@ -554,7 +573,7 @@ class SelectedWidgetWithProperties extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SelectedWidgetWithProperties', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'helloworld'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
-    ..m<$core.String, Field>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'properties', entryClassName: 'SelectedWidgetWithProperties.PropertiesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OM, valueCreator: Field.create, packageName: const $pb.PackageName('helloworld'))
+    ..m<$core.String, $core.String>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'properties', entryClassName: 'SelectedWidgetWithProperties.PropertiesEntry', keyFieldType: $pb.PbFieldType.OS, valueFieldType: $pb.PbFieldType.OS, packageName: const $pb.PackageName('helloworld'))
     ..hasRequiredFields = false
   ;
 
@@ -562,7 +581,7 @@ class SelectedWidgetWithProperties extends $pb.GeneratedMessage {
   factory SelectedWidgetWithProperties({
     $core.String? id,
     $core.String? type,
-    $core.Map<$core.String, Field>? properties,
+    $core.Map<$core.String, $core.String>? properties,
   }) {
     final _result = create();
     if (id != null) {
@@ -616,6 +635,6 @@ class SelectedWidgetWithProperties extends $pb.GeneratedMessage {
   void clearType() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.Map<$core.String, Field> get properties => $_getMap(2);
+  $core.Map<$core.String, $core.String> get properties => $_getMap(2);
 }
 
