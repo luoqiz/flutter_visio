@@ -17,7 +17,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugRepaintRainbowEnabled=true;
+  debugRepaintRainbowEnabled = true;
   if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
     await Window.initialize();
     // await Window.hideWindowControls();
@@ -39,8 +39,10 @@ Future<void> main() async {
     // }
   }
 
+  
   await Global.init();
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -57,7 +59,7 @@ class MyApp extends StatelessWidget {
         footerTriggerDistance: 150,
         child: GetMaterialApp(
           title: 'News',
-          theme: AppTheme.light,
+          theme: AppTheme.dark,
           debugShowCheckedModeBanner: false,
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,

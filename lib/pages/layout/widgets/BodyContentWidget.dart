@@ -14,68 +14,141 @@ class BodyContentWidget extends GetView<LayoutController> {
     return child;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    GlobalKey key = GlobalKey();
-    GlobalKey key1 = GlobalKey();
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.grey[500],
-          border: Border.all(width: 2.0),
-          borderRadius: BorderRadius.circular(4)),
-      child: Column(
+  Widget text = Text("555");
+
+  final Map<String, CanvasWidget> _map = {
+    "1": CanvasWidget(
+      child: Focus(
+        key: GlobalKey(),
+        focusNode: FocusNode(),
+        child: Container(
+          // color: Colors.green,
+          child: Text("123"),
+        ),
+      ),
+      position: Offset(90, 90),
+      size: Size(120, 120),
+    ),
+    "2": CanvasWidget(
+      child: Scaffold(
+        key: GlobalKey(),
+        appBar: AppBar(
+          leading: Placeholder(),
+        ),
+        body: Container(
+          color: Colors.green,
+          child: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              print("11111111111111");
+            },
+          ),
+        ),
+      ),
+      position: Offset(190, 30),
+      size: Size(365, 720),
+    ),
+    "3": CanvasWidget(
+      child: Stack(
+        key: GlobalKey(),
         children: [
-          Container(
-            key: key1,
-          ),
-          DragTarget<String>(
-            key: key,
-            builder: (
-              BuildContext context,
-              List<dynamic> accepted,
-              List<dynamic> rejected,
-            ) {
-              return Container(
-                margin: EdgeInsets.only(left: 40, top: 40),
-                alignment: Alignment(0, 0),
-                height: 50,
-                width: 300,
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                  //设置四周圆角 角度 这里的角度应该为 父Container height 的一半
-                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  //设置四周边框
-                  border: new Border.all(width: 1, color: Colors.red),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onPanStart: (_) {},
+                // onPanUpdate: (update) {
+                //   element.position.updateValue(element.position.value + update.delta, context, element.id);
+                // },
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration:
+                      BoxDecoration(border: Border.all(color: Colors.white)),
+                  child: Icon(Icons.open_with),
                 ),
-                child: Text("Container 的圆角边框"),
-              );
-            },
-            onAccept: (data) {
-              print('Enter floatingActionButton.onPressed()');
-              Widget text = Container(
-                width: 100,
-                height: 100,
-                decoration: new BoxDecoration(
-                  border: new Border.all(color: Color(0xFFFF0000), width: 0.5),
-                  // 边色与边宽度
-                  color: Color(0xFF9E9E9E),
-                  // 底色
-                  //        borderRadius: new BorderRadius.circular((20.0)), // 圆角度
-                  borderRadius: new BorderRadius.vertical(
-                      top: Radius.elliptical(20, 50)), // 也可控件一边圆角大小
-                ),
-              );
-              Element? e = (key.currentContext as Element);
-              e.owner?.lockState(() {
-                text.createElement().mount(e, e.slot);
-              });
-            },
+              ),
+            ),
           ),
-          Text("data2"),
-          Text("data3"),
-          Text("data4"),
         ],
       ),
+      position: Offset(600, 40),
+      size: Size(200, 400),
+    ),
+    "4": CanvasWidget(
+      child: Scaffold(
+        key: GlobalKey(),
+        body: SizedBox(
+          key: GlobalKey(),
+          width: 100,
+          height: 200,
+          child: GestureDetector(
+            child:  Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Text("data----//////////////--"),
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 30),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  child: Text("element!.name"),
+                  top: -16,
+                  height: 16,
+                ),
+              ],
+            ),
+            onTap: () {
+              print("123");
+            },
+          ),
+        ),
+      ),
+      position: Offset(900, 40),
+      size: Size(400, 400),
+    ),
+  };
+
+  Widget wrapWithSelector(Widget child) {
+    Widget result = child;
+
+    result = Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        child,
+        Positioned.fill(
+          child: IgnorePointer(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue, width: 3),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          child: Text("element!.name"),
+          top: -16,
+          height: 16,
+        ),
+      ],
+    );
+
+    return GestureDetector(
+      child: result,
+      onTap: () {
+        print("123");
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Simple2DCanvas(
+      widgets: _map,
     );
   }
 }

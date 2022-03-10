@@ -46,4 +46,8 @@ class AppTheme {
       unselectedLabelColor: AppColor.secondaryText,
     ),
   );
+
+  static ThemeData dark = ThemeData(
+    brightness: Brightness.dark,
+  );
 }

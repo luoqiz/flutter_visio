@@ -13,11 +13,14 @@ class BodyLeftWidget extends GetView<LayoutController> {
         child: Column(
           children: [
             Container(
+              width: 100,
+              height: 100,
+              color: Colors.green,
               alignment: Alignment.center,
               child: Draggable<String>(
-                data: "Draggable数据",
-                child: Text("我可以被拖动！"),
-                feedback: Text("我正在被拖动！"),
+                data: "Container",
+                child: Text("Container 部件"),
+                feedback: Text("Container 部件"),
               ),
             ),
             Text("data2"),
